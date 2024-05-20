@@ -80,10 +80,7 @@ const Module3 = () => {
 
   return (
     <div className="grid grid-cols-2">
-      <section className=" border-r-slate-500 border-r-4">
-        <h2 className="m-4 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Knapsack Algorithimn
-        </h2>
+      <section className="border-r-slate-500 border-r-4 col-span-2 flex justify-center">
         <section className="block max-w-sm p-6 bg-green-200 border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  m-4">
           <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             Vehicular Traffic Optimization
@@ -101,36 +98,44 @@ const Module3 = () => {
                 onChange={handleChangeCapacityC}
               />
             </label>
-            <button type="submit">Optimize Traffic</button>
+            <button
+              type="submit"
+              className="bg-green-600 text-white rounded-lg p-2"
+            >
+              Optimize Traffic
+            </button>
           </form>
         </section>
-
-        <section className="block max-w-sm  p-6 bg-green-200 border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  m-4">
+        <section className="block max-w-sm p-6 bg-green-200 border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  m-4">
           <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             Add Vehicle
           </h5>
 
-          <div className="grid grid-cols-1 gap-4">
-            <label>
-              Value:
-              <input
-                type="number"
-                value={newVehicleValue}
-                onChange={(e) => setNewVehicleValue(parseInt(e.target.value))}
-              />
-            </label>
-            <label>
-              Weight:
-              <input
-                type="number"
-                value={newVehicleWeight}
-                onChange={(e) => setNewVehicleWeight(parseInt(e.target.value))}
-              />
-            </label>
-            <button onClick={handleAddVehicle}>Add Vehicle</button>
+          <div className="grid grid-cols-2 gap-2 ">
+            <label>Value:</label>
+            <input
+              className=" col-span-2"
+              type="number"
+              value={newVehicleValue}
+              onChange={(e) => setNewVehicleValue(parseInt(e.target.value))}
+            />
+            <label>Weight:</label>
+            <input
+              type="number"
+              value={newVehicleWeight}
+              onChange={(e) => setNewVehicleWeight(parseInt(e.target.value))}
+              className=" col-span-2"
+            />
+            <button
+              onClick={handleAddVehicle}
+              className=" col-span-2 bg-green-600 text-white"
+            >
+              Add Vehicle
+            </button>
           </div>
         </section>
-        <section className="m-4">
+
+        <section className="block max-w-sm p-6 bg-green-200 border border-gray-500 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  m-4">
           <h2 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             Vehicles
           </h2>
@@ -148,6 +153,12 @@ const Module3 = () => {
             ))}
           </ul>
         </section>
+      </section>
+      <section className=" border-r-slate-500 border-r-4">
+        <h2 className="m-4 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Knapsack Algorithimn
+        </h2>
+
         {result !== null && (
           <div className="m-4">
             <p>

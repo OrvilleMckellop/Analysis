@@ -12,37 +12,87 @@ const GreedySortM3 = (props: Props) => {
 
   const capacity = 15;
 
-  function sortAndSelectObjects(array, capacity) {
-    // Sort the array of objects by value in descending order
+  function sortAndSelectObjects(array: any[], capacity: number) {
     const sortedArray = array.sort((a, b) => b.value - a.value);
-
     let totalWeight = 0;
     const selectedObjects = [];
+    const process = [];
 
-    // Iterate through the sorted array and select objects until capacity is reached
     for (const obj of sortedArray) {
       if (totalWeight + obj.weight <= capacity) {
         selectedObjects.push(obj);
         totalWeight += obj.weight;
+        process.push({
+          selectedObject: obj,
+          totalWeight: totalWeight,
+        });
       } else {
-        // If adding the current object exceeds capacity, break the loop
         break;
       }
     }
 
-    return selectedObjects;
+    return { selectedObjects, process };
   }
 
-  const selectedObjects = sortAndSelectObjects(objects, capacity);
+  const { selectedObjects, process } = sortAndSelectObjects(objects, capacity);
 
   return (
     <div>
-      <h2>Selected Objects</h2>
-      <ul>
-        {selectedObjects.map((obj, index) => (
-          <li key={index}>{`Value: ${obj.value}, Weight: ${obj.weight}`}</li>
-        ))}
-      </ul>
+      <h2 className="text-xl font-bold mb-4">Selected Objects</h2>
+      <div className="flex mb-4">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold">Table</h3>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-400 px-4 py-2">Value</th>
+                <th className="border border-gray-400 px-4 py-2">Weight</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedObjects.map((obj, index) => (
+                <tr key={index}>
+                  <td className="border border-gray-400 px-4 py-2">
+                    {obj.value}
+                  </td>
+                  <td className="border border-gray-400 px-4 py-2">
+                    {obj.weight}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex-1 ml-4">
+          <h3 className="text-lg font-semibold">Process</h3>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-400 px-4 py-2">Step</th>
+                <th className="border border-gray-400 px-4 py-2">
+                  Selected Object
+                </th>
+                <th className="border border-gray-400 px-4 py-2">
+                  Total Weight
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {process.map((step, index) => (
+                <tr key={index}>
+                  <td className="border border-gray-400 px-4 py-2">
+                    {index + 1}
+                  </td>
+                  <td className="border border-gray-400 px-4 py-2">{`Value: ${step.selectedObject.value}, Weight: ${step.selectedObject.weight}`}</td>
+                  <td className="border border-gray-400 px-4 py-2">
+                    {step.totalWeight}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
