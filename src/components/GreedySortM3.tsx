@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-type Props = {};
+interface Props {
+  values: number[];
+  weights: number[];
+  capacity: number;
+  onSortAndSelect: (sortAndSelect: () => void) => void;
+}
 
-const GreedySortM3 = (props: Props) => {
-  const objects = [
-    { value: 4, weight: 14 },
-    { value: 7, weight: 10 },
-    { value: 8, weight: 5 },
-    // Add more objects as needed
-  ];
+interface Object {
+  value: number;
+  weight: number;
+}
 
-  const capacity = 15;
+interface ProcessStep {
+  selectedObject: Object;
+  totalWeight: number;
+}
 
-  function sortAndSelectObjects(array: any[], capacity: number) {
-    const sortedArray = array.sort((a, b) => b.value - a.value);
+const GreedySortM3: React.FC<Props> = ({
+  values,
+  weights,
+  capacity,
+  onSortAndSelect,
+}) => {
+  const [selectedObjects, setSelectedObjects] = useState<Object[]>([]);
+  const [process, setProcess] = useState<ProcessStep[]>([]);
+
+  const objects: Object[] = values.map((value, index) => ({
+    value,
+    weight: weights[index],
+  }));
+
+  function sortAndSelectObjects() {
+    const sortedArray = objects.sort((a, b) => b.value - a.value);
     let totalWeight = 0;
-    const selectedObjects = [];
-    const process = [];
+    const selectedObjects: Object[] = [];
+    const process: ProcessStep[] = [];
 
     for (const obj of sortedArray) {
       if (totalWeight + obj.weight <= capacity) {
@@ -24,21 +43,26 @@ const GreedySortM3 = (props: Props) => {
         totalWeight += obj.weight;
         process.push({
           selectedObject: obj,
-          totalWeight: totalWeight,
+          totalWeight,
         });
       } else {
         break;
       }
     }
 
-    return { selectedObjects, process };
+    setSelectedObjects(selectedObjects);
+    setProcess(process);
   }
 
-  const { selectedObjects, process } = sortAndSelectObjects(objects, capacity);
+  useEffect(() => {
+    if (onSortAndSelect) {
+      onSortAndSelect(sortAndSelectObjects);
+    }
+  }, [onSortAndSelect]);
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Selected Objects</h2>
+      <h2 className="text-xl font-bold mb-4">Greedy Alogrithmn</h2>
       <div className="flex mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold">Table</h3>

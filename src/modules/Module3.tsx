@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import GreedySortM3 from "../components/GreedySortM3.tsx";
 
 interface Vehicle {
@@ -8,10 +8,12 @@ interface Vehicle {
 
 const Module3 = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [capacityC, setCapacityC] = useState<number | "">("");
+  const [capacityC, setCapacityC] = useState<number>(0);
   const [result, setResult] = useState<number | null>(null);
   const [newVehicleValue, setNewVehicleValue] = useState<number>(0);
   const [newVehicleWeight, setNewVehicleWeight] = useState<number>(0);
+
+  const triggerSortAndSelect = useRef<() => void>(() => {});
 
   const handleChangeCapacityC = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCapacityC(parseInt(e.target.value));
@@ -28,38 +30,17 @@ const Module3 = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const weights: number[] = vehicles.map((vehicle) => vehicle.weight);
-    const values: number[] = vehicles.map((vehicle) => vehicle.value);
-    const capacity: number = capacityC !== "" ? capacityC : 0;
-    setResult(valueBasedTraffic(weights, values, capacity));
+  const handleSortAndSelectSetup = (sortAndSelect: () => void) => {
+    triggerSortAndSelect.current = sortAndSelect;
   };
 
-  const knapsackTraffic = (
-    weights: number[],
-    values: number[],
-    capacity: number
-  ): number => {
-    const n = weights.length;
-    const dp = new Array(n + 1)
-      .fill(0)
-      .map(() => new Array(capacity + 1).fill(0));
-
-    for (let i = 1; i <= n; i++) {
-      for (let w = 1; w <= capacity; w++) {
-        if (weights[i - 1] <= w) {
-          dp[i][w] = Math.max(
-            values[i - 1] + dp[i - 1][w - weights[i - 1]],
-            dp[i - 1][w]
-          );
-        } else {
-          dp[i][w] = dp[i - 1][w];
-        }
-      }
-    }
-
-    return dp[n][capacity];
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    triggerSortAndSelect.current(); // Call the sort and select function
+    const weights: number[] = vehicles.map((vehicle) => vehicle.weight);
+    const values: number[] = vehicles.map((vehicle) => vehicle.value);
+    const capacity: number = capacityC !== null ? capacityC : 0;
+    setResult(valueBasedTraffic(weights, values, capacity));
   };
 
   const valueBasedTraffic = (
@@ -67,15 +48,20 @@ const Module3 = () => {
     values: number[],
     capacity: number
   ): number => {
-    const n: number = weights.length;
-    let element: Vehicle = { weight: 0, value: 0 };
+    const n = weights.length;
+    let totalValue = 0;
+    let totalWeight = 0;
 
-    for (let index = 0; index < n; index++) {
-      element = { weight: weights[index], value: values[index] };
+    for (let i = 0; i < n; i++) {
+      if (totalWeight + weights[i] <= capacity) {
+        totalValue += values[i];
+        totalWeight += weights[i];
+      } else {
+        break;
+      }
     }
-    console.log(element);
 
-    return 0;
+    return totalValue;
   };
 
   return (
@@ -156,7 +142,7 @@ const Module3 = () => {
       </section>
       <section className=" border-r-slate-500 border-r-4">
         <h2 className="m-4 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Knapsack Algorithimn
+          Knapsack Algorithm
         </h2>
 
         {result !== null && (
@@ -167,17 +153,19 @@ const Module3 = () => {
             <KnapsackGrid
               weights={vehicles.map((vehicle) => vehicle.weight)}
               values={vehicles.map((vehicle) => vehicle.value)}
-              capacity={capacityC !== "" ? parseInt(capacityC) : 0}
+              capacity={capacityC}
             />
           </div>
         )}
       </section>
 
       <section>
-        <h2 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Mine
-        </h2>
-        <GreedySortM3 />
+        <GreedySortM3
+          values={vehicles.map((vehicle) => vehicle.value)}
+          weights={vehicles.map((vehicle) => vehicle.weight)}
+          capacity={capacityC}
+          onSortAndSelect={handleSortAndSelectSetup}
+        />
       </section>
     </div>
   );

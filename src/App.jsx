@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Module3 from "./modules/Module3";
+import Module1 from "./modules/Module1";
+import Module2 from "./modules/Module2";
 
 function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -78,8 +80,16 @@ function App() {
           </ul>
         </div>
         {/* Content for each tab */}
-        {activeTab === "profile" && <div>Profile Content</div>}
-        {activeTab === "dashboard" && <div>Dashboard Content</div>}
+        {activeTab === "profile" && (
+          <div>
+            <Module1 />
+          </div>
+        )}
+        {activeTab === "dashboard" && (
+          <div>
+            <Module2 />
+          </div>
+        )}
         {activeTab === "settings" && (
           <div>
             <Module3 />
