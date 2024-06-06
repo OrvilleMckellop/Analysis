@@ -1,14 +1,15 @@
 import { useState } from "react";
-import Module3 from "./modules/Module3";
 import Module1 from "./modules/Module1";
 import Module2 from "./modules/Module2";
+import Module3 from "./modules/Module3";
 
 function App() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("profile");
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
   };
+
   return (
     <>
       <div>
@@ -55,11 +56,9 @@ function App() {
               <a
                 href="#"
                 className={`inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 ${
-                  activeTab === "contacts"
-                    ? "text-blue-600 border-blue-600"
-                    : ""
+                  activeTab === "module4" ? "text-blue-600 border-blue-600" : ""
                 }`}
-                onClick={() => handleTabChange("contacts")}
+                onClick={() => handleTabChange("module4")}
               >
                 Module 4
               </a>
@@ -68,11 +67,9 @@ function App() {
               <a
                 href="#"
                 className={`inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 ${
-                  activeTab === "contacts"
-                    ? "text-blue-600 border-blue-600"
-                    : ""
+                  activeTab === "module5" ? "text-blue-600 border-blue-600" : ""
                 }`}
-                onClick={() => handleTabChange("contacts")}
+                onClick={() => handleTabChange("module5")}
               >
                 Module 5
               </a>
@@ -95,7 +92,18 @@ function App() {
             <Module3 />
           </div>
         )}
-        {activeTab === "contacts" && <div>Contacts Content</div>}
+        {activeTab === "module4" && (
+          <div>
+            <h2>Content for Module 4</h2>
+            <p>This is the content for the fourth module.</p>
+          </div>
+        )}
+        {activeTab === "module5" && (
+          <div>
+            <h2>Content for Module 5</h2>
+            <p>This is the content for the fifth module.</p>
+          </div>
+        )}
       </div>
     </>
   );
